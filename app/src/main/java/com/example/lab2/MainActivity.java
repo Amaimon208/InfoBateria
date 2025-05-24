@@ -29,6 +29,12 @@ public class MainActivity extends AppCompatActivity {
             String techVal = intent.getStringExtra(BatteryManager.EXTRA_TECHNOLOGY);
             int tempVal = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1);
             int voltVal = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1);
+            batteryProgressBar = findViewById(R.id.batteryProgressBar);
+
+            if (levelVal >= 0 && levelVal <= 100) {
+                // Aktualizacja ProgressBar
+                batteryProgressBar.setProgress(levelVal);
+            }
 
             level.setText("EXTRA_LEVEL: " + levelVal);
 
@@ -63,6 +69,18 @@ public class MainActivity extends AppCompatActivity {
         voltage = findViewById(R.id.voltage);
 
         registerReceiver(mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mBatInfoReceiver);
     }
 
     @Override
